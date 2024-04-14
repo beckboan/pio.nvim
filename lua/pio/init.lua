@@ -1,7 +1,5 @@
 local M = {}
 
-local path = require("plenary.path")
-
-M.setup = function() end
+print("Ok, loaded from pio.nvim")
 
 return M
