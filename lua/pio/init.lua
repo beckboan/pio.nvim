@@ -1,19 +1,27 @@
 local M = {}
 
-M.run_pio_command = function(command)
-	local full_command = "pio " .. command
-	local output = vim.fn.system(full_command)
+local function getPIOIni(path)
+	local target = "platformio.ini"
+	-- Check if the target exists in the path directory
+	local targetPath = path .. "/" .. target
+	local exists = vim.fn.filereadable(targetPath)
 
-	if vim.v.shell_error ~= 0 then
-		print("Error running command: " .. full_command)
-		print("Output: " .. output)
-	end
-
-	for _, line in ipairs(vim.fn.split(output, "\n")) do
-		print(line)
+	if exists == 1 then
+		return targetPath
+	else
+		return nil
 	end
 end
 
-print("Ok, loaded from pio.nvim")
+function M.isPIOProject()
+	local cwd = vim.fn.getcwd()
+	if getPIOIni(cwd) then
+		print("PlatformIO project detected")
+		return true
+	else
+		print("Not a PlatformIO project")
+		return false
+	end
+end
 
 return M
