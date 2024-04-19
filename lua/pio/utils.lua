@@ -15,7 +15,7 @@ end
 
 M.is_pio_project = function()
 	local cwd = vim.fn.getcwd()
-	if M.getPIOIni(cwd) then
+	if M.get_pio_ini(cwd) then
 		print("PlatformIO project detected")
 		return true
 	else
