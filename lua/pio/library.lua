@@ -23,3 +23,7 @@ local menu = function(opts)
 end
 
 menu(require("telescope.themes").get_dropdown({}))
+
+M = {}
+
+return M
