@@ -24,7 +24,7 @@ Pio_buf_id = nil
 local function update_popup_buffer()
 	vim.api.nvim_buf_set_lines(Pio_buf_id, 0, -1, true, items)
 	plenary.nvim.async_call(function()
-		popup.create({ contents = items })
+		popup.move(Pio_win_id, { contents = items, bufnr = Pio_buf_id })
 	end)
 end
 
@@ -54,6 +54,7 @@ local libCallback = function(line_num)
 			end
 		end
 	end
+	update_popup_buffer()
 end
 
 local get_menu_item = function()
@@ -61,7 +62,7 @@ local get_menu_item = function()
 
 	local content = {}
 
-	for k, line in pairs(lines) do
+	for _, line in pairs(lines) do
 		table.insert(content, line)
 	end
 
