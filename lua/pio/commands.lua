@@ -1,5 +1,15 @@
 local M = {}
 
+M.titles = {
+	"Build",
+	"Upload",
+	"Clean",
+	"Libraries",
+	"Platforms",
+	"Devices",
+	"Inspect",
+}
+
 local pio_commands = {
 	["access"] = { "grant", "list", "private", "public", "revoke", "-h", "--help" },
 	["account"] = { "destroy", "forgot", "login", "logout", "password", "register", "show", "token", "-h", "--help" },
