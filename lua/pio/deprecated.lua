@@ -122,3 +122,41 @@
 -- 	Pio_win_id = menu_window.menu_id
 -- 	Pio_buf_id = menu_window.buf_num
 -- end
+--
+--
+--
+-- local popup = Menu({
+-- 	position = "50%",
+-- 	size = {
+-- 		width = 25,
+-- 		height = 10,
+-- 	},
+-- 	border = {
+-- 		style = "rounded",
+-- 		text = {
+-- 			top = "PIO NVIM Menu",
+-- 			top_align = "center",
+-- 		},
+-- 	},
+-- 	win_options = {
+-- 		winhighlight = "Normal:Normal,FloatBorder:Normal",
+-- 	},
+-- 	buf_options = {
+-- 		modifiable = false,
+-- 		readonly = true,
+-- 	},
+-- }, {
+-- 	max_width = 30,
+-- 	keymap = {
+-- 		focus_next = { "j", "<Down>", "<Tab>" },
+-- 		focus_prev = { "k", "<Up>", "<S-Tab>" },
+-- 		close = { "<Esc>", "<C-c>" },
+-- 		submit = { "<CR>", "<Space>" },
+-- 	},
+-- 	on_close = function()
+-- 		print("Menu Closed!")
+-- 	end,
+-- 	on_submit = function(item)
+-- 		print("Menu Submitted: ", item.text)
+-- 	end,
+-- })
