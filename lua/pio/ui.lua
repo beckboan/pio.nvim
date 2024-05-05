@@ -1,5 +1,4 @@
 local utils = require("pio.utils")
-local piomenu = require("pio.piomenu")
 
 local Popup = require("nui.popup")
 local Layout = require("nui.layout")
@@ -93,7 +92,7 @@ local create_menu = function()
 		prepare_node = function(node)
 			local line = Line()
 			if node:has_children() then
-				line:append(node:is_expanded() and " " or " ", "SpecialChar")
+				line:append(node:is_expanded() and "˅" or "˃", "SpecialChar")
 				line:append(node.text)
 
 				return line
@@ -148,20 +147,26 @@ local create_menu = function()
 
 	popup:map("n", "<Enter>", function()
 		local node, linenr = tree:get_node()
-		if not node:has_children() then
-			node, linenr = tree:get_node(node:get_parent_id())
-		end
-		if node and node:expand() then
-			if not node.checked then
-				node.checked = true
+		if node and node:has_children() then
+			if node:is_expanded() then
+				node:collapse()
+				print("Closing")
+				vim.api.nvim_win_set_cursor(popup.winid, { linenr, 0 })
+				tree:render()
+			else
+				node:expand()
+				print("Opening")
+				if not node.checked then
+					node.checked = true
 
-				vim.schedule(function()
-					tree:render()
-				end)
+					vim.schedule(function()
+						tree:render()
+					end)
+				end
+
+				vim.api.nvim_win_set_cursor(popup.winid, { linenr, 0 })
+				tree:render()
 			end
-
-			vim.api.nvim_win_set_cursor(popup.winid, { linenr, 0 })
-			tree:render()
 		end
 	end, map_options)
 
