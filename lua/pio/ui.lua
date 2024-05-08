@@ -7,6 +7,7 @@ local event = require("nui.utils.autocmd").event
 local Tree = require("nui.tree")
 local Line = require("nui.line")
 local Text = require("nui.text")
+local Lib = require("pio.library")
 
 Pio_popup = nil
 

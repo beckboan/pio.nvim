@@ -122,19 +122,29 @@ local pio_commands = {
 	["update"] = { "--core-packages", "--only-check", "--dry-run", "-h", "--help" },
 	["upgrade"] = { "-h", "--help" },
 }
+local function parse_command(output)
+	local lines = {}
+	for s in output:gmatch("[^\r\n]+") do
+		table.insert(lines, s)
+	end
+
+	return lines
+end
 
 M.run_pio_command = function(command)
 	local full_command = "pio " .. command
-	local output = vim.fn.system(full_command)
 
-	if vim.v.shell_error ~= 0 then
-		print("Error running command: " .. full_command)
-		print("Output: " .. output)
-	end
+	local file = io.popen(full_command)
 
-	for _, line in ipairs(vim.fn.split(output, "\n")) do
-		print(line)
+	if not file then
+		return nil
 	end
+	local output = file:read("*a")
+	if not output then
+		return nil
+	end
+	file:close()
+	local lines = parse_command(output)
+
+	return lines
 end
-
-return M
