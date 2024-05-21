@@ -123,12 +123,25 @@ local pio_commands = {
 	["upgrade"] = { "-h", "--help" },
 }
 local parse_command = function(output)
-	local lines = {}
-	for s in output:gmatch("[^\r\n]+") do
-		table.insert(lines, s)
+	local data = {}
+	local current_group = {}
+
+	for line in output:gmatch("[^\r\n]+") do
+		if line == "" then
+			if #current_group > 0 then
+				table.insert(data, current_group)
+				current_group = {} -- Reset the current group for the next set of lines
+			end
+		else
+			table.insert(current_group, line)
+		end
 	end
 
-	return lines
+	if #current_group > 0 then
+		table.insert(data, current_group)
+	end
+
+	return data
 end
 
 M.run_pio_command = function(command)
