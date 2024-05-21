@@ -122,7 +122,7 @@ local pio_commands = {
 	["update"] = { "--core-packages", "--only-check", "--dry-run", "-h", "--help" },
 	["upgrade"] = { "-h", "--help" },
 }
-local function parse_command(output)
+local parse_command = function(output)
 	local lines = {}
 	for s in output:gmatch("[^\r\n]+") do
 		table.insert(lines, s)
@@ -148,3 +148,5 @@ M.run_pio_command = function(command)
 
 	return lines
 end
+
+return M
