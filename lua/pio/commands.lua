@@ -122,21 +122,32 @@ local pio_commands = {
 	["update"] = { "--core-packages", "--only-check", "--dry-run", "-h", "--help" },
 	["upgrade"] = { "-h", "--help" },
 }
+
+local test =
+	"Found 714 packages (page 1 of 72)\n\nmbed-phoenixunicamp/oJSON\nLibrary • 0.0.0+sha.ac1512fd0d1e • Published on Sat Nov 24 17:09:28 2012\nBasic Implementation of JSON.Capable of create a JSON string and parse a JSON string.Uses the lazy JSON implementation.Incapable of modify and delete variables from the objects.Contains 2 objects: JSONArray and JSONObject.Inspired in Java-Android implementation of JSON.Version 0.5.\n\nredhat2410/VhJson\nLibrary • 1.1.2 • Published on Wed May 31 07:41:45 2023\nVhJson is the easiest JSON manipulation library to parse or deserialize complex or nested JSON object and arrays."
+
 local parse_command = function(output)
 	local data = {}
 	local current_group = {}
+	local empty_line_count = 0
 
-	for line in output:gmatch("[^\r\n]+") do
-		if line == "" then
-			if #current_group > 0 then
+	for line in output:gmatch("([^\r\n]*[\r\n]?)") do
+		if line == "\n" or line == "\r\n" then
+			-- If an empty line is encountered, increment the empty line count
+			empty_line_count = empty_line_count + 1
+		else
+			if empty_line_count > 0 then
+				-- If there were empty lines before this line, add the current group to the data table
 				table.insert(data, current_group)
 				current_group = {} -- Reset the current group for the next set of lines
+				empty_line_count = 0 -- Reset the empty line count
 			end
-		else
+			-- Add the line to the current group
 			table.insert(current_group, line)
 		end
 	end
 
+	-- Add the last group to the data table
 	if #current_group > 0 then
 		table.insert(data, current_group)
 	end
@@ -161,5 +172,7 @@ M.run_pio_command = function(command)
 
 	return lines
 end
+
+parse_command(test)
 
 return M

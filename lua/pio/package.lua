@@ -39,6 +39,7 @@ local search_library = function(name)
 	local entries = {}
 
 	for i, group in ipairs(vals) do
+		print(group[1])
 		table.insert(entries, group[1])
 	end
 
