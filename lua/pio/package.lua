@@ -11,11 +11,11 @@ local utils = require("pio.utils")
 
 local live_lib_search = function(opts, results)
 	opts = opts or {}
-	-- local vals = commands.run_pio_command("pkg search 'type:library'")
 	results = results or {}
-	-- for _, val in ipairs(vals) do
-	-- 	table.insert(results, { value = val })
-	-- end
+
+	if type(results) ~= "table" then
+		results = {}
+	end
 
 	pickers
 		.new(opts, {
@@ -28,22 +28,19 @@ local live_lib_search = function(opts, results)
 		:find()
 end
 
-live_lib_search(require("telescope.themes").get_dropdown({}))
-
 local search_library = function(name)
 	local command = "pkg search 'type:library " .. name .. "'"
 	local vals = commands.run_pio_command(command)
 
-	print(#vals)
+	print(vals[1][1])
 
 	local entries = {}
 
 	for i, group in ipairs(vals) do
-		print(group[1])
 		table.insert(entries, group[1])
 	end
 
-	live_lib_search({}, entries)
+	live_lib_search(require("telescope.themes").get_dropdown({}), entries)
 end
 
 local test_lib = function()
@@ -57,3 +54,4 @@ local test_lib = function()
 end
 
 search_library("json")
+-- test_lib()
