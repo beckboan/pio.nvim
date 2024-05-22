@@ -9,38 +9,49 @@ local commands = require("pio.commands")
 
 local utils = require("pio.utils")
 
-local live_lib_search = function(opts, results)
-	opts = opts or {}
-	results = results or {}
+local search_pkg = function(name, args, cmds)
+	name = name or ""
+	args = args or ""
+	cmds = cmds or ""
+	local command = "pkg search '" .. args .. " " .. name .. "'" .. " " .. cmds
+	local vals = commands.run_pio_command(command)
 
-	if type(results) ~= "table" then
-		results = {}
+	if vals == nil then
+		return
+	end
+
+	return vals
+end
+
+local live_lib_search = function(opts, name)
+	opts = opts or {}
+
+	if type(name) ~= "string" then
+		return
+	end
+
+	local vals = search_pkg(name, "type:library", "-s popularity")
+
+	local entries = {}
+
+	for _, group in ipairs(vals) do
+		table.insert(entries, group[1])
+	end
+
+	if #entries == 0 then
+		print("No entries found")
+		return
 	end
 
 	pickers
 		.new(opts, {
 			prompt_title = "PIO Command",
 			finder = finders.new_table({
-				results = results,
+				results = entries,
 			}),
 			sorter = conf.generic_sorter(opts),
 		})
 		:find()
-end
-
-local search_library = function(name)
-	local command = "pkg search 'type:library " .. name .. "'"
-	local vals = commands.run_pio_command(command)
-
-	print(vals[1][1])
-
-	local entries = {}
-
-	for i, group in ipairs(vals) do
-		table.insert(entries, group[1])
-	end
-
-	live_lib_search(require("telescope.themes").get_dropdown({}), entries)
 end
 
 local test_lib = function()
@@ -53,5 +64,6 @@ local test_lib = function()
 	live_lib_search({}, results)
 end
 
-search_library("json")
+live_lib_search(require("telescope.themes").get_dropdown({}), "json")
+
 -- test_lib()
