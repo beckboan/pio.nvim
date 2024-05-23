@@ -7,7 +7,9 @@ local event = require("nui.utils.autocmd").event
 local Tree = require("nui.tree")
 local Line = require("nui.line")
 local Text = require("nui.text")
--- local package = require("pio.package")
+
+local package = require("pio.package")
+-- live_lib_search(require("telescope.themes").get_dropdown({}), "json")
 
 Pio_popup = nil
 
@@ -15,25 +17,24 @@ local M = {}
 
 local menuitems = {
 	Boards = {
-		"List",
-		"Add",
+		"List Boards",
+		"Add Boards",
 	},
 	Libraries = {
-		"Install",
-		"Uninstall",
-		"Update",
+		"Install Libraries",
+		"Uninstall Libraries",
+		"Update Libraries",
 	},
 	Platforms = {
-		"Install",
-		"Uninstall",
-		"Update",
+		"Install Platforms",
+		"Uninstall Platforms",
+		"Update Platforms",
 	},
 	Devices = {
-		"List",
-		"Monitor",
+		"List Devices",
+		"Monitor Devices",
 	},
 	Inspect = {
-		"Environment",
 		"Inspect Memory",
 		"Check Code",
 	},
@@ -135,8 +136,6 @@ local create_menu = function()
 				node.checked = true
 
 				vim.schedule(function()
-					for _, n in ipairs(tree:get_nodes(node:get_id())) do
-					end
 					tree:render()
 				end)
 			end
@@ -168,6 +167,10 @@ local create_menu = function()
 				vim.api.nvim_win_set_cursor(popup.winid, { linenr, 0 })
 				tree:render()
 			end
+		elseif node and not node:has_children() then
+			print("Clicking")
+		else
+			print("Nothing")
 		end
 	end, map_options)
 
